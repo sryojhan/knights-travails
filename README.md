@@ -36,8 +36,6 @@ This project uses the **Breadth-First Search (BFS)** algorithm to calculate the 
 
 The core logic is implemented in JavaScript. Each square is treated as a node, and the knight's potential moves are edges in the graph. By using BFS, we explore all positions in increasing distance from the starting point. Once the destination is reached, we backtrack through the `parent` references to reconstruct the shortest path.
 
-> 💡 You can paste your implementation here.
-
 ```js
 const CalculateTravailPath = function (origin, destination) {
 
@@ -100,18 +98,8 @@ const CalculateTravailPath = function (origin, destination) {
 
 ## 🎨 Design
 
-- Default chessboard colors: `#b48762` and `#f0d9b5`
-- Alternate highlighted colors are used when a square is selected.
 - The knight's movement is rendered in steps for better visual feedback.
-
----
-
-## 📂 Future Improvements
-
-- Highlight the path before moving.
-- Animate each step of the knight’s movement.
-- Allow resizing the board dynamically (e.g., 5×5, 10×10).
-- Add reset and randomize buttons.
+- While the knight moves, the path it has been following is highlighted for a clearer vision of the path.
 
 ---
 
@@ -127,12 +115,3 @@ const CalculateTravailPath = function (origin, destination) {
 
 Developed by **Yojhan Steven García Peña**  
 Feel free to connect or check out more of my work!
-
-[GitHub](#) • [Portfolio](#) • [LinkedIn](#)  
-<!-- Replace with your actual links -->
-
----
-
-## 🧪 License
-
-MIT – Free to use, modify, and distribute.
