@@ -37,45 +37,154 @@ This project uses the **Breadth-First Search (BFS)** algorithm to calculate the 
 The core logic is implemented in JavaScript. Each square is treated as a node, and the knight's potential moves are edges in the graph. By using BFS, we explore all positions in increasing distance from the starting point. Once the destination is reached, we backtrack through the `parent` references to reconstruct the shortest path.
 
 ```js
+/**
+ * Calculate the shortest path between two points by knight moves using BFS
+ * @param {number} origin origin position as a linear index
+ * @param {number} destination destination position as a linear index
+ * @returns array with the path of calculated positions (beginning and end included)
+ */
 const CalculateTravailPath = function (origin, destination) {
 
-    // Creates a node object with its current position and parent
+    /** Creates a node for a given position. A node contains a value and a predecessor
+    * @param {number} position position given as a linear index
+    * @param {Node} parent parent node*/
     const CreateNode = function (position, parent) {
-        return { position, parent };
-    };
+        return {
+            position, parent
+        }
+    }
 
+
+    // Queue with the nodes pending to visit
     const queue = [CreateNode(origin, null)];
-    const allElements = [origin];
+
+    // Array with every position added to the queue, to avoid duplicates
+    const allElements = [origin]
 
     let result = null;
 
     while (queue.length > 0) {
+
+        // Pop the first element of the queue
         const node = queue.shift();
 
+        // When the element is found, exit the loop
         if (node.position === destination) {
+
             result = node;
             break;
         }
 
+        // Calculate all possible knight moves from the position
         const knightMoves = KnightPosibleMovesFrom(node.position);
 
+        // Create a node for each calculated position and add it to the queue
         knightMoves.forEach(move => {
+
+            // If the element is already included, discard it
             if (allElements.includes(move)) return;
+
+            // Add the position (and Node) to the queue and positions array
             queue.push(CreateNode(move, node));
             allElements.push(move);
         });
     }
 
-    // Backtrack from the destination to the origin to build the path
+    //! We dont check the result because in this exercise it is guaranteed to have a result
+
+
+    // Convert out Node linked list into a positions array with the result
+
     const path = [];
+
     while (result !== null) {
+
         path.push(result.position);
         result = result.parent;
     }
 
-    return path.reverse(); // Path is built from destination to origin, so we reverse it
-};
+
+    // The path has been built from destination to origin, so we have to reverse it first
+    return path.reverse();
+}
 ```
+
+```js
+/**
+ * Calculate all the knight possible moves from a given square position
+ * @param {number} origin origin position, in a linear index
+ * @returns Array with all possible moves 
+ */
+const KnightPosibleMovesFrom = function (origin) {
+
+    const directions = [[1, 2], [1, -2], [-1, 2], [-1, -2], [2, 1], [2, -1], [-2, 1], [-2, -1]];
+
+    const { col, row } = CalculateColAndRow(origin);
+
+    const moves = [];
+
+    directions.forEach((dir) => {
+
+        const newPos = [col + dir[0], row + dir[1]];
+
+        // Rule out invalid possitions outside of the grid
+        if (newPos[0] < 0 || newPos[0] >= 8 || newPos[1] < 0 || newPos[1] >= 8) return;
+
+        //Convert from col and row to index
+        const newPosIdx = newPos[1] * 8 + newPos[0];
+
+        moves.push(newPosIdx);
+    });
+
+    return moves;
+}
+```
+
+
+```js
+
+/**
+ * Begin the animation of the horse, moving until it reaches the destination position
+ * @param {number} destination destination linear index
+ */
+const BeginTravail = async function (destination) {
+
+    // Avoid colliding animations. Don't start a new one until we are finished
+    if (inTraversal) return;
+    inTraversal = true;
+    chessBoard.classList.add('traversal');
+
+    // Draw a frame around the destination square
+    SetTargetSquare(destination);
+
+    const initialPosition = currentPosition;
+    // Calculate the path to follow, given the horse current position and the desired destination
+    const path = CalculateTravailPath(initialPosition, destination);
+
+
+    for (const position of path) {
+
+        // Color the path as the horse moves around the board
+        ColorChessSquare(position);
+        MoveHorseToSquare(position);
+
+        // Pause so we can follow the path and it doesn't occur in a single frame
+        if (position !== initialPosition && position != destination) // Avoid to long wait in the first and last move
+            await Sleep(1000);
+        else await Sleep(200);
+    }
+
+    // Clear the board coloring
+    ClearSelectedSquares(path);
+    RemoveTargetSquare(destination);
+
+    // End the traversal animation
+    chessBoard.classList.remove('traversal');
+    inTraversal = false;
+}
+
+```
+
 ---
 
 ## 🖱️ How to Use
