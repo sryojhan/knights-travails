@@ -15,7 +15,6 @@ The knight can be moved again and again by clicking on new squares, allowing for
 ## 🚀 Live Demo
 
 👉 [View the project live](https://sryojhan.github.io/knights-travails/)  
-<!-- Replace '#' with the actual URL of your deployed project (e.g., GitHub Pages, Netlify, etc.) -->
 
 ---
 
@@ -209,6 +208,7 @@ const BeginTravail = async function (destination) {
 
 - The knight's movement is rendered in steps for better visual feedback.
 - While the knight moves, the path it has been following is highlighted for a clearer vision of the path.
+- Support for various board sizes!
 
 ---
 

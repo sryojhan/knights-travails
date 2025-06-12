@@ -3,7 +3,7 @@
 const chessBoard = document.querySelector('.chess-board');
 const horse = document.querySelector('#horse');
 
-const N = 8;
+let N = 8;
 
 let inTraversal = false;
 let currentPosition = -1;
@@ -38,6 +38,8 @@ const Sleep = function (ms) {
  */
 const PopulateChessBoard = function () {
 
+    chessBoard.innerHTML = "";
+
     const boardSize = N * N;
     for (let idx = 0; idx < boardSize; idx++) {
 
@@ -64,7 +66,6 @@ const PopulateChessBoard = function () {
     chessBoard.style.gridTemplateColumns = `repeat(${N}, 1fr)`;
     chessBoard.style.gridTemplateRows = `repeat(${N}, 1fr)`;
 };
-PopulateChessBoard();
 
 
 
@@ -85,14 +86,23 @@ const MoveHorseToSquare = function (idx) {
  */
 const InitialiseHorse = function () {
 
-    const randomInitialPosition = Math.floor(Math.random() * 64);
+    const randomInitialPosition = Math.floor(Math.random() * N * N);
     MoveHorseToSquare(randomInitialPosition);
 
     horse.classList.remove('hidden');
 };
-InitialiseHorse();
 
 
+/**
+ * Initialise the board and the knight
+ */
+const InitialiseBoard = function(){
+
+    PopulateChessBoard();
+    InitialiseHorse();
+}
+
+InitialiseBoard();
 
 //* Pathfinding
 
@@ -114,10 +124,10 @@ const KnightPosibleMovesFrom = function (origin) {
         const newPos = [col + dir[0], row + dir[1]];
 
         // Rule out invalid possitions outside of the grid
-        if (newPos[0] < 0 || newPos[0] >= 8 || newPos[1] < 0 || newPos[1] >= 8) return;
+        if (newPos[0] < 0 || newPos[0] >= N || newPos[1] < 0 || newPos[1] >= N) return;
 
         //Convert from col and row to index
-        const newPosIdx = newPos[1] * 8 + newPos[0];
+        const newPosIdx = newPos[1] * N + newPos[0];
 
         moves.push(newPosIdx);
     });
@@ -225,7 +235,7 @@ const BeginTravail = async function (destination) {
 
         // Pause so we can follow the path and it doesn't occur in a single frame
         if (position !== initialPosition && position != destination) // Avoid to long wait in the first and last move
-            await Sleep(1000);
+            await Sleep(600);
         else await Sleep(200);
     }
 
@@ -265,3 +275,47 @@ const RemoveTargetSquare = function (idx) {
 
     chessBoard.children[idx].classList.remove('target');
 }
+
+
+//* Manage size
+
+const sizeLabel = document.querySelector('#size-label');
+
+const sizeSubtract = document.querySelector('#size-subtract');
+const sizeAdd = document.querySelector('#size-add');
+
+const minN = 4;
+const maxN = 13;
+
+const UpdateSizeLabel = function(){
+
+    sizeLabel.textContent = `${N}x${N}`;
+}
+
+UpdateSizeLabel();
+
+const UpdateBoardSize = function(value){
+
+    if(inTraversal) return;
+
+    N += value;
+    
+    InitialiseBoard();
+    UpdateSizeLabel();
+
+    sizeAdd.disabled = false;
+    sizeSubtract.disabled = false;
+
+    if(N === minN) sizeSubtract.disabled = true;
+    else if(N === maxN) sizeAdd.disabled = true;
+}
+
+sizeSubtract.addEventListener('click', ()=>{
+
+    UpdateBoardSize(-1);
+});
+
+sizeAdd.addEventListener('click', ()=>{
+
+    UpdateBoardSize(1);
+});

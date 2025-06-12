@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "Poppins";
+    src: url(./fonts/Poppins-Regular.ttf);
+}
+
 body{
 
     color: white;
@@ -10,8 +15,11 @@ body{
     height: 100vh;
 
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    font-family: "Poppins";
 }
 
 
@@ -120,4 +128,44 @@ body{
         transform: scaleX(1) scaleY(1);
     }
 
+}
+
+
+.size-controller{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.size-controller button{
+
+    padding: 10px 50px;
+    box-sizing: border-box;
+    color: white;
+    border-radius: 8px;
+    border: white solid 2px;
+    background-color: transparent;
+
+    font-size: 1.5em;
+}
+
+.size-controller button:disabled{
+
+    color: grey;
+    border: grey solid 2px;
+}
+
+
+.size-controller button:not(:disabled):hover{
+
+    background-color: white;
+    color: #151515;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.size-controller button:not(:disabled):active{
+
+    transform: scale(.9);
 }
