@@ -74,6 +74,8 @@ PopulateChessBoard();
  */
 const MoveHorseToSquare = function (idx) {
 
+    if(currentPosition === idx) return;
+    
     currentPosition = idx;
     chessBoard.children[idx].append(horse);
 }

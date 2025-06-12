@@ -95,9 +95,29 @@ body{
     box-sizing: border-box;
     width: 90%;
     z-index: 2;
+    animation: squash 0.2s ease;
 }
+
 
 #horse.hidden{
 
     display: none;
+}
+
+
+@keyframes squash{
+
+    0%{
+        transform: scaleX(1) scaleY(1);
+    }
+
+    50%{
+        transform: scaleX(1.1) scaleY(0.9);
+
+    }
+
+    100%{
+        transform: scaleX(1) scaleY(1);
+    }
+
 }
